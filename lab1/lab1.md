@@ -326,56 +326,17 @@ TriggeredBy: ● docker.socket
 <details><summary>Docker compose file</summary>
 
 ```yml
-dymytryke@dymytryke:~/obnbd/lab1$ cat docker-compose.yml 
 version: "3.9"
 services:
-  postgres:
-    image: postgres:13.3
-    command:
-      - "postgres"
-      - "-c"
-      - "max_connections=50"
-      - "-c"
-      - "shared_buffers=1GB"
-      - "-c"
-      - "effective_cache_size=4GB"
-      - "-c"
-      - "work_mem=16MB"
-      - "-c"
-      - "maintenance_work_mem=512MB"
-      - "-c"
-      - "random_page_cost=1.1"
-      - "-c"
-      - "temp_file_limit=10GB"
-      - "-c"
-      - "log_min_duration_statement=200ms"
-      - "-c"
-      - "idle_in_transaction_session_timeout=10s"
-      - "-c"
-      - "lock_timeout=1s"
-      - "-c"
-      - "statement_timeout=60s"
-      - "-c"
-      - "shared_preload_libraries=pg_stat_statements"
-      - "-c"
-      - "pg_stat_statements.max=10000"
-      - "-c"
-      - "pg_stat_statements.track=all"
+  oracle:
+    image: container-registry.oracle.com/database/express:latest
     environment:
-      POSTGRES_DB: "dymytryke"
-      POSTGRES_USER: "dymytryke"
-      POSTGRES_PASSWORD: "dymytryke"
-      PGDATA: "/C/pg-docker/data"
+      ORACLE_PWD: "dymytryke"
     volumes:
-      - .:/var/lib/postgresql/data
+      - ./opt/oracle/oradata:/opt/oracle/oradata
     ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dymytryke -d dymytryke"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+      - "1526:1521"
+      - "5500:5500"
     restart: unless-stopped
     deploy:
       resources:
@@ -387,78 +348,16 @@ services:
 
 <details><summary>DBMS startup</summary>
 
-```bash
-dymytryke@dymytryke:~/obnbd/lab1$ docker-compose up
-WARN[0000] /home/dymytryke/obnbd/lab1/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
-[+] Running 14/1
- ✔ postgres Pulled                                                                                                                                              10.0s 
-[+] Running 2/2
- ✔ Network lab1_default       Created                                                                                                                            0.3s 
- ✔ Container lab1-postgres-1  Created                                                                                                                            0.4s 
-Attaching to postgres-1
-postgres-1  | The files belonging to this database system will be owned by user "postgres".
-postgres-1  | This user must also own the server process.
-postgres-1  | 
-postgres-1  | The database cluster will be initialized with locale "en_US.utf8".
-postgres-1  | The default database encoding has accordingly been set to "UTF8".
-postgres-1  | The default text search configuration will be set to "english".
-postgres-1  | 
-postgres-1  | Data page checksums are disabled.
-postgres-1  | 
-postgres-1  | fixing permissions on existing directory /C/pg-docker/data ... ok
-postgres-1  | creating subdirectories ... ok
-postgres-1  | selecting dynamic shared memory implementation ... posix
-postgres-1  | selecting default max_connections ... 100
-postgres-1  | selecting default shared_buffers ... 128MB
-postgres-1  | selecting default time zone ... Etc/UTC
-postgres-1  | creating configuration files ... ok
-postgres-1  | running bootstrap script ... ok
-postgres-1  | performing post-bootstrap initialization ... ok
-postgres-1  | initdb: warning: enabling "trust" authentication for local connections
-postgres-1  | You can change this by editing pg_hba.conf or using the option -A, or
-postgres-1  | --auth-local and --auth-host, the next time you run initdb.
-postgres-1  | syncing data to disk ... ok
-postgres-1  | 
-postgres-1  | 
-postgres-1  | Success. You can now start the database server using:
-postgres-1  | 
-postgres-1  |     pg_ctl -D /C/pg-docker/data -l logfile start
-postgres-1  | 
-postgres-1  | waiting for server to start....2025-02-03 21:55:37.932 UTC [48] LOG:  starting PostgreSQL 13.3 (Debian 13.3-1.pgdg100+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 8.3.0-6) 8.3.0, 64-bit
-postgres-1  | 2025-02-03 21:55:37.934 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-postgres-1  | 2025-02-03 21:55:37.941 UTC [49] LOG:  database system was shut down at 2025-02-03 21:55:36 UTC
-postgres-1  | 2025-02-03 21:55:37.948 UTC [48] LOG:  database system is ready to accept connections
-postgres-1  |  done
-postgres-1  | server started
-postgres-1  | 2025-02-03 21:55:38.610 UTC [74] LOG:  duration: 552.677 ms  statement: CREATE DATABASE "dymytryke" ;
-postgres-1  | CREATE DATABASE
-postgres-1  | 
-postgres-1  | 
-postgres-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
-postgres-1  | 
-postgres-1  | waiting for server to shut down...2025-02-03 21:55:38.613 UTC [48] LOG:  received fast shutdown request
-postgres-1  | .2025-02-03 21:55:38.615 UTC [48] LOG:  aborting any active transactions
-postgres-1  | 2025-02-03 21:55:38.616 UTC [48] LOG:  background worker "logical replication launcher" (PID 55) exited with exit code 1
-postgres-1  | 2025-02-03 21:55:38.617 UTC [50] LOG:  shutting down
-postgres-1  | 2025-02-03 21:55:38.644 UTC [48] LOG:  database system is shut down
-postgres-1  |  done
-postgres-1  | server stopped
-postgres-1  | 
-postgres-1  | PostgreSQL init process complete; ready for start up.
-postgres-1  | 
-postgres-1  | 2025-02-03 21:55:38.757 UTC [1] LOG:  starting PostgreSQL 13.3 (Debian 13.3-1.pgdg100+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 8.3.0-6) 8.3.0, 64-bit
-postgres-1  | 2025-02-03 21:55:38.757 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-postgres-1  | 2025-02-03 21:55:38.757 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-postgres-1  | 2025-02-03 21:55:38.762 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-postgres-1  | 2025-02-03 21:55:38.768 UTC [76] LOG:  database system was shut down at 2025-02-03 21:55:38 UTC
-postgres-1  | 2025-02-03 21:55:38.774 UTC [1] LOG:  database system is ready to accept connections
-```
+![alt text](image-1.png)
 
-![docker extension](image.png)
+![alt text](image.png)
+
+![alt text](image-2.png)
+
 </details>
 
 <details><summary>Connection to the DB</summary>
 
-![alt text](image-1.png)
+![alt text](image-3.png)
 
 </details>
