@@ -323,41 +323,40 @@ TriggeredBy: ● docker.socket
 
 ## Встановлення та налаштування СУБД
 
-<details><summary>Docker compose file</summary>
+[Docker compose file](./docker-compose.yml)
 
-```yml
-version: "3.9"
-services:
-  oracle:
-    image: container-registry.oracle.com/database/express:latest
-    environment:
-      ORACLE_PWD: "dymytryke"
-    volumes:
-      - ./opt/oracle/oradata:/opt/oracle/oradata
-    ports:
-      - "1526:1521"
-      - "5500:5500"
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 4G
-```
-</details>
+### DBMS startup
 
-<details><summary>DBMS startup</summary>
+![docker compose up](image.png)
 
-![alt text](image-1.png)
+### Connection to the DB
 
-![alt text](image.png)
+![alt text](images/image-1.png)
 
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 
-</details>
+### Init DB structure (create tables, procedures)
 
-<details><summary>Connection to the DB</summary>
+The DB structure init was performed through [Initialization scripts](https://hub.docker.com/_/postgres#:~:text=and%20POSTGRES_DB.-,Initialization%20scripts,-If%20you%20would). I added the scripts to a directory and mounted that directory to /docker-entrypoint-initdb.d directory in the container. These initialization files will be executed in sorted name order as defined by the current locale, which defaults to en_US.utf8, so i prepended numbers to ensure the correct order of execution.
 
-![alt text](image-3.png)
+**Important:** the initialization files will not be run if the data directory is not empty.
+ 
+Results:
 
-</details>
+![alt text](images/image-3.png)
+
+### Populate the DB with data
+
+Now we execute the created procedures to populate tables with data (randomly generated):
+
+![alt text](images/image-4.png)
+
+![alt text](images/image-5.png)
+
+Results of the procedures execution:
+
+![alt text](images/image-6.png)
+
+### Hierarchy
+
+![alt text](images/image-7.png)
