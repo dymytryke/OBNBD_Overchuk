@@ -327,7 +327,7 @@ TriggeredBy: ● docker.socket
 
 ### DBMS startup
 
-![docker compose up](image.png)
+![docker compose up](images/image.png)
 
 ### Connection to the DB
 
