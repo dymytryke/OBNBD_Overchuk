@@ -1,4 +1,4 @@
-# OBNBD_Overchuk
+# OBNBD Brigade №88
 
 ## Lab 1
 
@@ -17,3 +17,13 @@
 ## Lab 4
 
 [Lab 4 report](./lab4/lab4_report.md)
+
+
+## Lab 5
+
+TODO [Lab 5 report]()
+
+
+## Lab 6
+
+[Lab 6 report](./lab6/lab6_report.md)
