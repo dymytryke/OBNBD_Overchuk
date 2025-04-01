@@ -7,6 +7,7 @@
 Глянемо в бд:
 
 ![img_1.png](images/img_1.png)
+
 2. ПІБ співробітника == <last_name> || ' ' || <first_name>
 
 ![img_2.png](images/img_2.png)
