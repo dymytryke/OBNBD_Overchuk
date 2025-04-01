@@ -21,7 +21,7 @@
 
 ## Lab 5
 
-TODO [Lab 5 report]()
+[Lab 5 report](./lab5/report.md)
 
 
 ## Lab 6
